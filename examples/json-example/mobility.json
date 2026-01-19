@@ -1,0 +1,37 @@
+[
+  {
+    "nodeId": 0,
+    "type": "ConstantPositionMobilityModel",
+    "position": {
+      "x": 30,
+      "y": 0,
+      "z": 0
+    }
+  },
+  {
+    "nodeId": 5,
+    "type": "WaypointMobilityModel",
+    "position": {
+      "x": 30,
+      "y": 0,
+      "z": 0
+    },
+    "waypoints": [
+      {
+        "time": 0,
+        "x": 50,
+        "y": 0,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "nodeId": 6,
+    "type": "ConstantPositionMobilityModel",
+    "position": {
+      "x": 60,
+      "y": 0,
+      "z": 0
+    }
+  }
+]
