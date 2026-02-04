@@ -2,7 +2,8 @@
 
 namespace ns3
 {
-namespace configjson2 {
+namespace configjson2
+{
 using json = nlohmann::json;
 
 WifiStandard
@@ -519,13 +520,11 @@ InternetHandler(const json& jInternet, ConfigJsonHelper& helper)
 
         helper.ipv4List = std::make_unique<Ipv4ListRoutingHelper>();
         helper.ipv6List = std::make_unique<Ipv6ListRoutingHelper>();
-
         /* ---------- IPv4 routing ---------- */
         for (const auto& j : jIpv4RoutingProtocols)
         {
             if (j.at("nodeId").get<uint32_t>() != nodeId)
                 continue;
-
             for (const auto& routeConf : j.at("ipv4RoutingList"))
             {
                 auto fn = helper.GetRegistry(JsonDomain::Ipv4RoutingProtocol,
@@ -533,7 +532,6 @@ InternetHandler(const json& jInternet, ConfigJsonHelper& helper)
                 fn(routeConf);
             }
         }
-
         /* ---------- IPv6 routing ---------- */
         for (const auto& j : jIpv6RoutingProtocols)
         {
@@ -547,7 +545,6 @@ InternetHandler(const json& jInternet, ConfigJsonHelper& helper)
                 fn(routeConf);
             }
         }
-
         /* ---------- Install stack ---------- */
         Ipv4ListRoutingHelper ipv4list = *helper.ipv4List;
         Ipv6ListRoutingHelper ipv6list = *helper.ipv6List;
@@ -666,10 +663,6 @@ Ipv6NetworkHandler(const json& jNetwork, ConfigJsonHelper& helper)
 void
 Ipv4StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
 {
-    uint32_t nodeId = jRouting.at("nodeId").get<uint32_t>();
-    Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
-    NS_ASSERT(node);
-
     /* ===============================
      * Internet stage: register helper
      * =============================== */
@@ -683,6 +676,9 @@ Ipv4StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
      * =============================== */
     else if (helper.status == JsonDomain::Ipv4RoutingProtocol)
     {
+        uint32_t nodeId = helper.currentNodeId;
+        Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
+        NS_ASSERT(node);
         if (!jRouting.contains("routes"))
             return;
 
@@ -711,9 +707,6 @@ Ipv4StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
 void
 Ipv6StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
 {
-    uint32_t nodeId = jRouting.at("nodeId").get<uint32_t>();
-    Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
-    NS_ASSERT(node);
 
     /* ===============================
      * Internet stage: register helper
@@ -728,6 +721,9 @@ Ipv6StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
      * =============================== */
     else if (helper.status == JsonDomain::Ipv6RoutingProtocol)
     {
+        uint32_t nodeId = helper.currentNodeId;
+        Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
+        NS_ASSERT(node);
         if (!jRouting.contains("routes"))
             return;
 
@@ -760,9 +756,6 @@ Ipv6StaticHandler(const json& jRouting, ConfigJsonHelper& helper)
 void
 OlsrHandler(const json& jRouting, ConfigJsonHelper& helper)
 {
-    uint32_t nodeId = jRouting.at("nodeId").get<uint32_t>();
-    Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
-    NS_ASSERT(node);
 
     /* ===============================
      * Internet stage: register helper
@@ -793,6 +786,9 @@ OlsrHandler(const json& jRouting, ConfigJsonHelper& helper)
      * =============================== */
     else if (helper.status == JsonDomain::Ipv4RoutingProtocol)
     {
+        uint32_t nodeId = helper.currentNodeId;
+        Ptr<Node> node = Names::Find<Node>("node" + std::to_string(nodeId));
+        NS_ASSERT(node);
         if (!jRouting.contains("hnaNetworks"))
             return;
 
@@ -1443,5 +1439,5 @@ SimulatorHandler(const json& jSimulator, ConfigJsonHelper& helper)
         }
     }
 }
-}
+} // namespace configjson2
 } // namespace ns3
